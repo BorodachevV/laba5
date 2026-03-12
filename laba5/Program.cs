@@ -4,10 +4,13 @@ namespace laba5
     {
         static void Main()
         {
-            var root = new FolderItem("Root"); var docs = new FolderItem("Documents"); var system = new FolderItem("System");
+            var root = new FolderItem("Root"); 
+            var docs = new FolderItem("Documents"); 
+            var system = new FolderItem("System");
             docs.Add(new FileItem("report.pdf", 2500)); 
             docs.Add(new FileItem("budget.xlsx", 1200)); 
-            system.Add(new FileItem("config.ini", 300)); system.Add(new FileItem("temp.tmp", 5000));
+            system.Add(new FileItem("config.ini", 300)); 
+            system.Add(new FileItem("temp.tmp", 5000));
             root.Add(docs); root.Add(system);
             Console.WriteLine("--- Исходная структура файловой системы ---"); 
             root.Display();
@@ -33,3 +36,4 @@ namespace laba5
         }
     }
 }
+
