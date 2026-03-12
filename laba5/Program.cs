@@ -1,26 +1,35 @@
-﻿namespace laba5
+namespace laba5
 {
     internal class Program
     {
         static void Main()
         {
-            // 1. Строим иерархию 
-            var root = new FolderItem("Root");
-            var docs = new FolderItem("Documents");
-
-            docs.Add(new FileItem("report.pdf", 2500));
-            root.Add(docs);
-
-            Console.WriteLine("--- Структура файловой системы ---");
+            var root = new FolderItem("Root"); var docs = new FolderItem("Documents"); var system = new FolderItem("System");
+            docs.Add(new FileItem("report.pdf", 2500)); 
+            docs.Add(new FileItem("budget.xlsx", 1200)); 
+            system.Add(new FileItem("config.ini", 300)); system.Add(new FileItem("temp.tmp", 5000));
+            root.Add(docs); root.Add(system);
+            Console.WriteLine("--- Исходная структура файловой системы ---"); 
             root.Display();
+            IFileSystem fileSystemAdapter = new FileSystemAdapter(root);
+            var facade = new FileSystemFacade(fileSystemAdapter);
 
-            // 2. Инициализируем подсистемы
-            IStorageAdapter local = new LocalStorageAdapter();
-            IStorageAdapter cloud = new CloudStorageAdapter();
 
-            // 3. Выполняем сложные сценарии через Фасад
-            var facade = new FileSystemFacade(local, cloud);
-            facade.BackupLocalToCloud(root);
+            var configs = new List<string>{        
+                "Root/System/config.ini",        
+                "Root/Documents/report.pdf",        
+                "Root/System/missing_file.txt"             
+            };            
+            facade.ReadSystemConfigs(configs);
+
+
+            var trashFiles = new List<string> {       
+                "Root/System/temp.tmp",        
+                "Root/Documents/budget.xlsx"      
+            };      
+            facade.BatchCleanup(trashFiles);
+            Console.WriteLine("--- Структура файловой системы после работы Фасада ---");     
+            root.Display();    
         }
     }
 }
